@@ -1,0 +1,21 @@
+@extends('layouts.app')
+
+@section('content')
+
+    <x-breadcrumb listRoute="{{route('{{modelNamePluralKebabCase}}.index')}}" model="{{modelName}}" :item="'Edit'"></x-breadcrumb>
+
+    <div class="card">
+        <div class="card-body">
+            <h4 class="card-title">Edit {{modelName}}</h4><br>
+
+            <x-form.wrapper action="{{route('{{modelNamePluralKebabCase}}.update', ${{modelNameSingularLowerCase}}->id)}}" method= "POST" enctype="multipart/form-data">
+                    @method('PATCH')
+                    {{fieldsForEdit}}
+
+                    <x-form.button class="btn btn-sm btn-dark" type="submit"><i class="bx bx-pencil bx-xs"></i></x-form.button>
+
+            </x-form.wrapper>
+        </div>
+    </div>
+
+@endsection

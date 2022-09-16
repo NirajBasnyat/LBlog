@@ -1,0 +1,64 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\View\View;
+use App\Models\{{modelName}};
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Http\RedirectResponse;
+use App\Http\Requests\{{modelName}}Request;
+use Symfony\Component\HttpFoundation\Response;
+
+class {{modelName}}Controller extends Controller
+{
+    public function index(): View
+    {
+        abort_if(Gate::denies('access-{{modelNameSingularLowerCase}}-page'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+
+        return view('{{modelNameSingularLowerCase}}.index', [
+            '{{modelNamePluralLowerCase}}' => {{modelName}}::latest()->get()
+        ]);
+    }
+
+    public function create(): View
+    {
+        abort_if(Gate::denies('add-{{modelNameSingularLowerCase}}'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+
+        return view('{{modelNameSingularLowerCase}}.create');
+    }
+
+    public function store({{modelName}}Request $request): RedirectResponse
+    {
+        {{modelName}}::create($request->validated());
+
+        return redirect()->route('{{modelNamePluralKebabCase}}.index')->with('success', '{{modelName}} Created Successfully!');
+    }
+
+    public function show({{modelName}} ${{modelNameSingularLowerCase}}): View
+    {
+        return view('{{modelNameSingularLowerCase}}.show', compact('{{modelNameSingularLowerCase}}'));
+    }
+
+    public function edit({{modelName}} ${{modelNameSingularLowerCase}}): View
+    {
+        abort_if(Gate::denies('edit-{{modelNameSingularLowerCase}}'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+
+        return view('{{modelNameSingularLowerCase}}.edit', compact('{{modelNameSingularLowerCase}}'));
+    }
+
+    public function update({{modelName}}Request $request, {{modelName}} ${{modelNameSingularLowerCase}}): RedirectResponse
+    {
+        ${{modelNameSingularLowerCase}}->update($request->validated());
+
+        return redirect()->route('{{modelNamePluralKebabCase}}.index')->with('success', '{{modelName}} Updated Successfully!');
+    }
+
+    public function destroy({{modelName}} ${{modelNameSingularLowerCase}}): RedirectResponse
+    {
+        abort_if(Gate::denies('delete-{{modelNameSingularLowerCase}}'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+
+        ${{modelNameSingularLowerCase}}->delete();
+
+        return redirect()->route('{{modelNamePluralKebabCase}}.index')->with('error', '{{modelName}} Deleted Successfully!');
+    }
+}

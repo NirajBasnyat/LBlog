@@ -1,0 +1,57 @@
+@extends('layouts.app')
+
+@section('content')
+
+<div class="container">
+
+    <x-breadcrumb model="{{modelNameSingularLowerCase}}"></x-breadcrumb>
+
+    <div class="card">
+
+        <div class="card-body">
+
+            <div class="d-flex justify-content-between">
+                <p class="lead m-0">{{modelName}} List</p>
+                <a href="{{route('{{modelNamePluralKebabCase}}.create')}}" class="btn btn-sm btn-dark">Create</a>
+            </div> <br>
+
+          <table id="datatable" class="table table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+
+            <thead>
+              <tr>
+                <th>SN</th>
+                {{theadForIndex}}@canany(['delete-{{modelNameSingularLowerCase}}','edit-{{modelNameSingularLowerCase}}'])<th>Action</th>@endcanany
+              </tr>
+            </thead>
+
+            <tbody>
+
+                @forelse (${{modelNamePluralLowerCase}} as ${{modelNameSingularLowerCase}})
+                    <tr>
+                      <td>{{$loop->iteration}}</td>
+
+                      {{rowsForIndex}}
+                       <td class="d-flex">
+                          @can('delete-{{modelNameSingularLowerCase}}')
+                              <x-list.delete route-destroy="{{route('{{modelNamePluralKebabCase}}.destroy', ${{modelNameSingularLowerCase}}->id ) }}"/>
+                          @endcan
+
+                          @can('edit-{{modelNameSingularLowerCase}}')
+                              <x-list.edit route-edit="{{route('{{modelNamePluralKebabCase}}.edit', ${{modelNameSingularLowerCase}}->id) }}" />
+                          @endcan
+                       </td>
+
+                    </tr>
+
+                @empty
+                    <td>No record</td>
+                @endforelse
+
+            </tbody>
+          </table>
+
+        </div>
+    </div>
+</div>
+
+@endsection
