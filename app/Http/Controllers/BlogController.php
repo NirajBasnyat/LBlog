@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Livewire\Categories;
-use App\Models\Admin\Category;
-use Illuminate\Http\Request;
-use Illuminate\View\View;
-use App\Models\Blog;
-use Illuminate\Support\Facades\Gate;
-use Illuminate\Http\RedirectResponse;
 use App\Http\Requests\BlogRequest;
+use App\Models\Admin\Category;
+use App\Models\Blog;
+use Yajra\DataTables\DataTables;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\View\View;
 use Symfony\Component\HttpFoundation\Response;
 
 class BlogController extends Controller
@@ -19,6 +19,36 @@ class BlogController extends Controller
         abort_if(Gate::denies('access-blog-page'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         return view('blog.index');
+    }
+
+    public function indexDatatable(Request $request)
+    {
+        abort_if(Gate::denies('access-blog-page'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+
+        if ($request->ajax()) {
+            $data = Blog::select(['id', 'title'])->get();
+            return Datatables::of($data)
+                ->addIndexColumn()
+                /*  ->addColumn('action', function ($row) {
+                     return view('components.list-button', [
+                         'routeDestroy' => route('blogs.destroy', $row->id),
+                     ])->render();
+                 }) */
+                ->addColumn('action', function ($row) {
+                    $btn = '<a href="' . route('blogs.show', $row->id) . '" class="view btn btn-info btn-sm pl-2">View</a> ';
+                    $btn = $btn . '<a href="' . route('blogs.edit', $row->id) . '" class="edit btn btn-primary btn-sm pl-2">Edit</a> ';
+                    $btn = $btn . '<a href="javascript:void(0)" class="delete btn btn-danger btn-sm">Delete</a>';
+
+                    return $btn;
+                })
+                ->rawColumns(['action'])
+                ->make(true);
+        }
+
+        return view('blog.index_datatable', [
+            'columns' => ['title'],
+        ]);
+
     }
 
     public function create(): View
@@ -97,7 +127,7 @@ class BlogController extends Controller
         return redirect()->route('blogs.index')->with('error', 'Blog Eliminated Successfully!');
     }
 
-    public function CkImageStore(Request$request)
+    public function CkImageStore(Request $request)
     {
         if ($request->hasFile('upload')) {
             $filename = time() . '.' . $request->file('upload')->getClientOriginalExtension();

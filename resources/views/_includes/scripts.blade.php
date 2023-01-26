@@ -25,9 +25,9 @@
     </script>
 @endif
 
-@stack('custom_js')
 
 @livewireScripts
+@stack('custom_js')
 
 </body>
 

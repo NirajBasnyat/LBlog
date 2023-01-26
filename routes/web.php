@@ -35,6 +35,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
 
 });
 
+Route::get('blogs-table', [BlogController::class,'indexDatatable'])->name('blogs.datatable');
 Route::get('trashed-blogs', [BlogController::class, 'trashed'])->name('blog.trashed');
 Route::post('blogs/{blog}/restore',[BlogController::class,'restore'])->name('blog.restore');
 Route::post('blogs/{blog}/force-delete',[BlogController::class,'forceDelete'])->name('blog.force_delete');

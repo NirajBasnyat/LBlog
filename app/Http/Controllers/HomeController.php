@@ -27,6 +27,11 @@ class HomeController extends Controller
     {
         abort_if(Gate::denies('access-dashboard'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        return view('home');
+        return view('home', [
+            'labels' => ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Hello'],
+            'new_labels' => ['Anime', 'Cartoon', 'Series', 'Movies'],
+            'data' => [12, 19, 3, 5, 2, 3],
+            'new_data' => [10, 19, 9, 1],
+        ]);
     }
 }

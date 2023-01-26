@@ -103,5 +103,17 @@
 
         </div>
     </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <x-chart id="hello" labels="{{json_encode($labels, JSON_THROW_ON_ERROR)}}" :data="$data"
+                chartLabel="number of people" chartType="line"></x-chart>
+        </div>
+        
+        <div class="col-md-6">
+            <x-chart id="hello2" labels="{{json_encode($new_labels, JSON_THROW_ON_ERROR)}}" :data="$new_data" chartLabel="Media"
+                chartType="bar"></x-chart>
+        </div>
+    </div>
     <!-- end row -->
 @endsection
